@@ -1,15 +1,22 @@
 import React from 'react';
 import css from './ImageGalleryItem.module.css';
 
-export const ImageGalleryItem = ({ photo }) => {
+export const ImageGalleryItem = ({ photo, index, openModal }) => {
   return (
-    <>
-      <img
-        className={css.imagegalleryitem_image}
-        src={photo.webformatURL}
-        datasrc={photo.largeImageURL}
-        alt={photo.tags}
-      />
-    </>
+    <li className={css.imagegalleryitem}>
+      <a
+        onClick={e => {
+          e.preventDefault();
+          openModal(index);
+        }}
+        href={photo.largeImageURL}
+      >
+        <img
+          className={css.imagegalleryitem_image}
+          src={photo.webformatURL}
+          alt={photo.tags}
+        />
+      </a>
+    </li>
   );
 };

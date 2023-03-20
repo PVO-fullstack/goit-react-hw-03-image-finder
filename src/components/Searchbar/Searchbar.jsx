@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import css from './Searchbar.module.css';
 
 export class Searchbar extends Component {
@@ -12,7 +13,12 @@ export class Searchbar extends Component {
 
   handleSubmit = e => {
     e.preventDefault();
+    if (!this.state.value) {
+      Notify.warning('Please, inpute word');
+      return;
+    }
     this.props.submit(this.state.value);
+    this.setState({ value: '' });
   };
 
   render() {
