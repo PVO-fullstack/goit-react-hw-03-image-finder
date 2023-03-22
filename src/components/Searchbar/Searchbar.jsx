@@ -8,9 +8,7 @@ export class Searchbar extends Component {
     value: '',
   };
 
-  handleInput = e => {
-    this.setState({ value: e.currentTarget.value });
-  };
+  handleInput = e => this.setState({ value: e.currentTarget.value });
 
   handleSubmit = e => {
     e.preventDefault();

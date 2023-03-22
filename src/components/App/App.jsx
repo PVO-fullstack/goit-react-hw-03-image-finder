@@ -18,44 +18,39 @@ export class App extends Component {
     activeImgIdx: null,
   };
 
-  handleGetPhotos = async data => {
-    await this.setState({ value: data, photos: [], page: 1, isLoading: true });
-    this.getPhoto();
-  };
+  handleGetPhotos = data =>
+    this.setState({ value: data, photos: [], page: 1, isLoading: true });
 
-  async getPhoto() {
-    const { value, page } = this.state;
-    try {
-      await API.getPictures({ query: value, currentPage: page }).then(
-        result => {
+  componentDidUpdate(prevProps, prevState) {
+    if (
+      prevState.value !== this.state.value ||
+      prevState.page !== this.state.page
+    ) {
+      const { value, page } = this.state;
+      try {
+        API.getPictures({ query: value, currentPage: page }).then(result => {
           if (result.hits.length <= 0) {
             Notify.warning('Nothing found, try another name');
-            this.setState({ isLoading: false });
+            this.setState(prevState => ({ isLoading: !prevState }));
             return;
           }
-          this.setState(state => ({
-            photos: [...state.photos, ...result.hits],
+          this.setState(prevState => ({
+            photos: [...prevState.photos, ...result.hits],
             isLoading: false,
           }));
-        }
-      );
-    } catch (error) {
-      console.log(error.data);
+        });
+      } catch (error) {
+        console.log(error.data);
+      }
     }
   }
 
-  handleGetMorePhotos = async () => {
-    await this.setState(state => ({ isLoading: true, page: state.page + 1 }));
-    this.getPhoto();
-  };
+  handleGetMorePhotos = () =>
+    this.setState(state => ({ isLoading: true, page: state.page + 1 }));
 
-  openModal = index => {
-    this.setState({ showModal: true, activeImgIdx: index });
-  };
+  openModal = index => this.setState({ showModal: true, activeImgIdx: index });
 
-  closeModal = () => {
-    this.setState({ showModal: false });
-  };
+  closeModal = () => this.setState({ showModal: false });
 
   render() {
     const { isLoading, photos, showModal, activeImgIdx } = this.state;
