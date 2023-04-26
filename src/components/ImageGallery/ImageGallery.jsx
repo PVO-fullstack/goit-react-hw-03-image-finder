@@ -9,7 +9,9 @@ export const ImageGallery = ({ photos, openModal }) => {
       {photos.map((photo, index) => (
         <ImageGalleryItem
           key={photo.id}
-          photo={photo}
+          href={photo.largeImageURL}
+          src={photo.webformatURL}
+          alt={photo.tags}
           index={index}
           openModal={openModal}
         />
@@ -19,6 +21,10 @@ export const ImageGallery = ({ photos, openModal }) => {
 };
 
 ImageGallery.propTypes = {
-  photos: PropTypes.array.isRequired,
+  photos: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number.isRequired,
+    })
+  ).isRequired,
   openModal: PropTypes.func.isRequired,
 };
