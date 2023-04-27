@@ -34,8 +34,16 @@ export class App extends Component {
             this.setState(prevState => ({ isLoading: !prevState }));
             return;
           }
+          const allPropertiasPhotos = result.hits;
+          const filtredPropertiasPhotos = allPropertiasPhotos.map(
+            ({ id, largeImageURL, webformatURL, tags }) => {
+              const photo = { id, largeImageURL, webformatURL, tags };
+              return photo;
+            }
+          );
+
           this.setState(prevState => ({
-            photos: [...prevState.photos, ...result.hits],
+            photos: [...prevState.photos, ...filtredPropertiasPhotos],
             isLoading: false,
           }));
         });
@@ -54,13 +62,13 @@ export class App extends Component {
 
   render() {
     const { isLoading, photos, showModal, activeImgIdx } = this.state;
-
+    const hideGetMoreButton = photos.length / (this.state.page * 12) < 1;
     return (
       <div className={css.app}>
         <Searchbar submit={this.handleGetPhotos} />
         <ImageGallery photos={photos} openModal={this.openModal} />
         {isLoading && <Loader />}
-        {photos.length !== 0 && <Button getMore={this.handleGetMorePhotos} />}
+        {!hideGetMoreButton && <Button getMore={this.handleGetMorePhotos} />}
         {showModal && (
           <Modal
             src={photos[activeImgIdx].largeImageURL}
